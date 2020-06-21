@@ -28,11 +28,11 @@ while True:
         #height, width = img_sum.shape[:2]
         #img_sum_rgba[0:height, 0:width] += img_src_rgba
 
-        cv2.imshow("Frame", img_sum_rgba)
+    cv2.imshow("Frame", img_sum)
     key = cv2.waitKey(30)
     if key == 27:
         break
 
-#cv2.imwrite('hoge.jpg', img_sum)
+cv2.imwrite('hoge.jpg', img_sum)
 cap.release()
 cv2.destroyAllWindows()
