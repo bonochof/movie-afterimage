@@ -5,6 +5,7 @@ filepath = "anime.gif"
 cap = cv2.VideoCapture(filepath)
 fgbg = cv2.createBackgroundSubtractorMOG2()
 
+first = None
 img_sum = None
 img_src = None
 
@@ -26,11 +27,16 @@ while True:
         img_sum_add = img_sum_rgba + img_src_rgba
         #img_sum = cv2.bitwise_or(img_sum_rgba, img_src_rgba)
         img_sum = cv2.addWeighted(img_sum_add, 1.0, img_src_rgba, 1.0, 0)
+        
+        if first is None:
+            first = img_sum
 
     cv2.imshow("Frame", img_sum)
     key = cv2.waitKey(30)
     if key == 27:
         break
+
+img_sum = cv2.addWeighted(img_sum, 0.6, first, 0.4, 0)
 
 cv2.imwrite('hoge.jpg', img_sum)
 cap.release()
