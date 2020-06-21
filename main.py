@@ -3,36 +3,25 @@ import cv2
 filepath = "anime.gif"
 cap = cv2.VideoCapture(filepath)
 
-avg = None
+img_sum = None
+img_src = None
 
 while True:
-    # 1フレームずつ取得する。
     ret, frame = cap.read()
     if not ret:
         break
 
-    # グレースケールに変換
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    # 比較用のフレームを取得する
-    if avg is None:
-        avg = gray.copy().astype("float")
-        continue
+    img_src = frame
+    if img_sum is None:
+        img_sum = img_src
+    else:
+        img_sum = cv2.addWeighted(img_sum, 0.6, img_src, 0.4, 0)
 
-    # 現在のフレームと移動平均との差を計算
-    cv2.accumulateWeighted(gray, avg, 0.9)
-    frameDelta = cv2.absdiff(gray, cv2.convertScaleAbs(avg))
-
-    # デルタ画像を閾値処理を行う
-    thresh = cv2.threshold(frameDelta, 3, 255, cv2.THRESH_BINARY)[1]
-    # 画像の閾値に輪郭線を入れる
-    contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    frame = cv2.drawContours(frame, contours, -1, (0, 255, 0), 3)
-
-    # 結果を出力
-    cv2.imshow("Frame", frame)
+    cv2.imshow("Frame", img_sum)
     key = cv2.waitKey(30)
     if key == 27:
         break
 
+cv2.imwrite('hoge.jpg', img_sum)
 cap.release()
 cv2.destroyAllWindows()
