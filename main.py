@@ -10,7 +10,6 @@ filepath = args[1]
 cap = cv2.VideoCapture(filepath)
 fgbg = cv2.createBackgroundSubtractorMOG2()
 
-first = None
 img_sum = None
 img_src = None
 
@@ -32,9 +31,6 @@ while True:
         img_sum = img_sum_rgba + img_src_rgba
         img_sum = cv2.addWeighted(img_sum, 1.0, img_src_rgba, 0.5, 0)
         img_sum = cv2.addWeighted(img_sum, 0.5, img_sum_rgba, 0.5, 0)
-        
-        if first is None:
-            first = img_sum
 
     cv2.imshow("Frame", img_sum)
     key = cv2.waitKey(30)
